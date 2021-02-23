@@ -3,5 +3,10 @@ package com.example.viewmodelexample
 import androidx.lifecycle.ViewModel
 
 class MainActivityViewModel: ViewModel() {
-    var helloWorld = "1234"
+
+    var helloWord :String? = null
+
+    fun sayHello(word: String) {
+        helloWord = word
+    }
 }

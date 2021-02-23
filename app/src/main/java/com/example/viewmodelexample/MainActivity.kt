@@ -2,36 +2,35 @@ package com.example.viewmodelexample
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.viewmodelexample.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnNavigationListener {
     lateinit var binding: ActivityMainBinding
+    lateinit var inputFragment: InputFragment
+    lateinit var outputFragment: OutputFragment
     lateinit var viewModel: MainActivityViewModel
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        binding.headerTitle.text = "123"
+        inputFragment = InputFragment.newInstance(this)
+        outputFragment =OutputFragment.newInstance()
 
-        initViewModel()
-        binding.apply {
-            headerTitle.text ="234"
-            button.setOnClickListener {
-                button.text ="Helllooooooooo"
-            }
+        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel.helloWord?.let {
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container,outputFragment).commit()
+        } ?: let {
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, inputFragment).commit()
         }
     }
 
-//    private fun initViewModel() {
-//       viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-//    }
-
-    private fun initViewModel() {
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+    override fun onHello() {
+        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, outputFragment).commit()
     }
 
-    }
+
+}
